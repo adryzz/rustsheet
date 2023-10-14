@@ -1,4 +1,4 @@
-use std::{num::NonZeroU8, fmt};
+use std::{num::NonZeroU8, fmt, default};
 
 use thiserror::Error;
 
@@ -93,14 +93,14 @@ pub trait TimeSignatureralElement {
     fn get_tempo(&self) -> TimeSignature;
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct NoteSize {
     pub unit: NoteSizeUnit,
     pub modifiers: Option<NoteSizeModifiers>
 }
 
 /// Expressed as 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum NoteSizeUnit {
     /// 8/1
     Large = 11,
@@ -109,6 +109,7 @@ pub enum NoteSizeUnit {
     /// 2/1
     Breve = 9,
     /// 1/1
+    #[default]
     SemiBreve = 8,
     /// 1/2
     Minim = 7,

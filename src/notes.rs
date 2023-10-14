@@ -2,19 +2,27 @@ use std::fmt;
 use std::num::ParseIntError;
 use std::str::FromStr;
 use thiserror::Error;
+use tinyvec::ArrayVec;
 use crate::tempo::NoteSize;
 
-
 #[derive(Debug, Clone, Copy)]
+pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
+    Note(Note),
+    Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
+    // TODO: find if we even need a full Note for the grace or just its pitch
+    WithGrace(Note, Note)
+}
+
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Note {
     pub pitch: NotePitch,
     pub size: NoteSize,
-    pub r#type: NoteType
-
+    pub ty: NoteType
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub enum NoteType {
+    #[default]
     Note,
     Rest
 }
@@ -24,6 +32,48 @@ pub struct NotePitch {
     pub octave: Octave,
     pub position: u8,
     pub modifiers: Option<NotePitchModifiers>
+}
+
+// default is C4
+impl Default for NotePitch {
+    fn default() -> Self {
+        Self { octave: Octave::C, position: 4, modifiers: None }
+    }
+}
+
+impl NotePitch {
+    pub fn get_semitones_since_c0(&self) -> u32 {
+        let mut semitones = self.position as u32 * 12;
+        semitones += self.octave as u32;
+        match self.modifiers {
+            Some(NotePitchModifiers::Sharp) => semitones += 1,
+            // FIXME: dont allow C0 flat
+            Some(NotePitchModifiers::Flat) => semitones -= 1,
+            _ => {}
+        };
+
+        semitones
+    }
+}
+
+impl PartialEq for NotePitch {
+    fn eq(&self, other: &Self) -> bool {
+        self.get_semitones_since_c0().eq(&other.get_semitones_since_c0())
+    }
+}
+
+impl Eq for NotePitch {}
+
+impl PartialOrd for NotePitch {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.get_semitones_since_c0().partial_cmp(&other.get_semitones_since_c0())
+    }
+}
+
+impl Ord for NotePitch {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.get_semitones_since_c0().cmp(&other.get_semitones_since_c0())
+    }
 }
 
 impl fmt::Display for NotePitch {
@@ -55,17 +105,17 @@ impl FromStr for NotePitch {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+// semitones since C
 pub enum Octave {
-    A,
-    B,
-    C,
-    D,
-    E,
-    F,
-    G
+    A = 9,
+    B = 11,
+    C = 0,
+    D = 2,
+    E = 4,
+    F = 5,
+    G = 7
 }
-
 impl TryFrom<char> for Octave {
     type Error = NoteError;
 
@@ -97,11 +147,11 @@ impl fmt::Display for Octave {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum NotePitchModifiers {
-    Sharp,
-    Flat,
-    Natural
+    Sharp = 2,
+    Flat = 0,
+    Natural = 1
 }
 
 impl fmt::Display for NotePitchModifiers {

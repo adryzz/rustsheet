@@ -1,4 +1,4 @@
-use crate::tempo::TimeSignature;
+use crate::{tempo::TimeSignature, notes::NotePitch};
 
 
 
@@ -37,7 +37,7 @@ pub enum Clef {
 pub struct BarHeader {
     pub clef: Option<Clef>,
     pub time_signature: Option<TimeSignature>,
-    // TODO: represent sharp/flat notes in headers
+    pub attributes: [Option<NotePitch>; 8]
 
 }
 
