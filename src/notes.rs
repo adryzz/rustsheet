@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, default};
 use std::num::ParseIntError;
 use std::str::FromStr;
 use thiserror::Error;
@@ -11,6 +11,12 @@ pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
     Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
     // TODO: find if we even need a full Note for the grace or just its pitch
     WithGrace(Note, Note)
+}
+
+impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
+    fn default() -> Self {
+        NoteWhateverFixMeFindANewNamePleaseImBeggingYou::Note(Default::default())
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default)]
