@@ -1,17 +1,14 @@
-use crate::{tempo::TimeSignature, notes::NotePitch};
-
-
+use crate::{notes::NotePitch, tempo::TimeSignature};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NotePosition {
     pub line: usize,
     pub bar: usize,
-    pub index: usize
+    pub index: usize,
 }
 
 impl PartialOrd for NotePosition {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-
         // you can only order notes if they're on the same line
         if self.line != other.line {
             return None;
@@ -30,21 +27,18 @@ pub enum Clef {
     Treble,
     Baritone,
     Bass,
-    SubBass
+    SubBass,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BarHeader {
     pub clef: Option<Clef>,
     pub time_signature: Option<TimeSignature>,
-    pub attributes: [Option<NotePitch>; 8]
-
+    pub attributes: [Option<NotePitch>; 8],
 }
 
 #[derive(Debug, Clone)]
-pub struct Bar {
-
-}
+pub struct Bar {}
 
 #[derive(Debug, Clone)]
 pub struct Line {

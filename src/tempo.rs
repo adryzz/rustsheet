@@ -1,21 +1,20 @@
-use std::{num::NonZeroU8, fmt, default};
+use std::{fmt, num::NonZeroU8};
 
 use thiserror::Error;
 
 use crate::math;
 
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TimeSignature {
     pub num: NonZeroU8,
-    pub den: NonZeroU8
+    pub den: NonZeroU8,
 }
 
 impl TimeSignature {
     /// Attempts to create a new TimeSignature, or fails if either the numerator or denominator are zero.
     /// ```
     /// use rustsheet::tempo::TimeSignature;
-    /// 
+    ///
     /// fn main() {
     ///     // Create a 1/4 time signature
     ///     let ts = TimeSignature::new(1, 4);
@@ -25,7 +24,7 @@ impl TimeSignature {
     /// This will return an error instead.
     /// ```
     /// use rustsheet::tempo::TimeSignature;
-    /// 
+    ///
     /// fn main() {
     ///     // Attempt to create a 0/4 time signature
     ///     let ts = TimeSignature::new(0, 4);
@@ -39,20 +38,20 @@ impl TimeSignature {
 
         Ok(Self {
             num: NonZeroU8::new(num).unwrap(),
-            den: NonZeroU8::new(den).unwrap()
+            den: NonZeroU8::new(den).unwrap(),
         })
     }
 
     /// Simplifies the ratio, if possible
-    /// 
+    ///
     /// ```
     /// use rustsheet::tempo::TimeSignature;
-    /// 
+    ///
     /// fn main() {
     ///     // Create a 2/4 and a 1/2 time signature
     ///     let ts1 = TimeSignature::new(2, 4).unwrap();
     ///     let ts2 = TimeSignature::new(1, 2).unwrap();
-    /// 
+    ///
     ///     // Simplifying the first time signature results in the second time signature
     ///     assert_eq!(ts1.simplify(), ts2);
     /// }
@@ -60,11 +59,11 @@ impl TimeSignature {
     /// This can't be simplified any further.
     /// ```
     /// use rustsheet::tempo::TimeSignature;
-    /// 
+    ///
     /// fn main() {
     ///     // Create a 5/12 time signatuee
     ///     let ts = TimeSignature::new(5, 12).unwrap();
-    /// 
+    ///
     ///     // You can't simplify the time signature any further
     ///     assert_eq!(ts.simplify(), ts);
     /// }
@@ -77,7 +76,7 @@ impl TimeSignature {
 
         TimeSignature {
             num: simplified_num,
-            den: simplified_den
+            den: simplified_den,
         }
     }
 }
@@ -88,7 +87,6 @@ impl fmt::Display for TimeSignature {
     }
 }
 
-
 pub trait TimeSignatureralElement {
     fn get_tempo(&self) -> TimeSignature;
 }
@@ -96,10 +94,10 @@ pub trait TimeSignatureralElement {
 #[derive(Debug, Clone, Copy, Default)]
 pub struct NoteSize {
     pub unit: NoteSizeUnit,
-    pub modifiers: Option<NoteSizeModifiers>
+    pub modifiers: Option<NoteSizeModifiers>,
 }
 
-/// Expressed as 
+/// Expressed as
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum NoteSizeUnit {
     /// 8/1
@@ -126,7 +124,7 @@ pub enum NoteSizeUnit {
     /// 1/128
     SemiHemiDemiSemiQuaver = 1,
     /// 1/256
-    DemiSemiHemiDemiSemiQuaver = 0
+    DemiSemiHemiDemiSemiQuaver = 0,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -134,11 +132,11 @@ pub enum NoteSizeModifiers {
     Dot,
     DoubleDot,
     TripleDot,
-    Crown
+    Crown,
 }
 
 #[derive(Debug, Clone, Copy, Error)]
 pub enum TimeSignatureError {
     #[error("Invalid ratio: {0}/{1}")]
-    InvalidRatio(u8, u8)
+    InvalidRatio(u8, u8),
 }

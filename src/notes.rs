@@ -1,16 +1,16 @@
-use std::{fmt, default};
+use crate::tempo::NoteSize;
 use std::num::ParseIntError;
 use std::str::FromStr;
+use std::fmt;
 use thiserror::Error;
 use tinyvec::ArrayVec;
-use crate::tempo::NoteSize;
 
 #[derive(Debug, Clone, Copy)]
 pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
     Note(Note),
     Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
     // TODO: find if we even need a full Note for the grace or just its pitch
-    WithGrace(Note, Note)
+    WithGrace(Note, Note),
 }
 
 impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
@@ -23,27 +23,31 @@ impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
 pub struct Note {
     pub pitch: NotePitch,
     pub size: NoteSize,
-    pub ty: NoteType
+    pub ty: NoteType,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
 pub enum NoteType {
     #[default]
     Note,
-    Rest
+    Rest,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct NotePitch {
     pub octave: Octave,
     pub position: u8,
-    pub modifiers: Option<NotePitchModifiers>
+    pub modifiers: Option<NotePitchModifiers>,
 }
 
 // default is C4
 impl Default for NotePitch {
     fn default() -> Self {
-        Self { octave: Octave::C, position: 4, modifiers: None }
+        Self {
+            octave: Octave::C,
+            position: 4,
+            modifiers: None,
+        }
     }
 }
 
@@ -64,7 +68,8 @@ impl NotePitch {
 
 impl PartialEq for NotePitch {
     fn eq(&self, other: &Self) -> bool {
-        self.get_semitones_since_c0().eq(&other.get_semitones_since_c0())
+        self.get_semitones_since_c0()
+            .eq(&other.get_semitones_since_c0())
     }
 }
 
@@ -72,13 +77,15 @@ impl Eq for NotePitch {}
 
 impl PartialOrd for NotePitch {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.get_semitones_since_c0().partial_cmp(&other.get_semitones_since_c0())
+        self.get_semitones_since_c0()
+            .partial_cmp(&other.get_semitones_since_c0())
     }
 }
 
 impl Ord for NotePitch {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.get_semitones_since_c0().cmp(&other.get_semitones_since_c0())
+        self.get_semitones_since_c0()
+            .cmp(&other.get_semitones_since_c0())
     }
 }
 
@@ -105,9 +112,8 @@ impl FromStr for NotePitch {
             octave,
             position: u8::from_str(num)?,
             // not implemented yet
-            modifiers: None
+            modifiers: None,
         })
-        
     }
 }
 
@@ -120,7 +126,7 @@ pub enum Octave {
     D = 2,
     E = 4,
     F = 5,
-    G = 7
+    G = 7,
 }
 impl TryFrom<char> for Octave {
     type Error = NoteError;
@@ -134,7 +140,7 @@ impl TryFrom<char> for Octave {
             'E' => Ok(Octave::E),
             'F' => Ok(Octave::F),
             'G' => Ok(Octave::G),
-            _ => Err(NoteError::InvalidOctave)
+            _ => Err(NoteError::InvalidOctave),
         }
     }
 }
@@ -157,7 +163,7 @@ impl fmt::Display for Octave {
 pub enum NotePitchModifiers {
     Sharp = 2,
     Flat = 0,
-    Natural = 1
+    Natural = 1,
 }
 
 impl fmt::Display for NotePitchModifiers {
@@ -177,5 +183,5 @@ pub enum NoteError {
     #[error("Invalid octave")]
     InvalidOctave,
     #[error("Invalid octave number")]
-    InvalidNumber(#[from] ParseIntError)
+    InvalidNumber(#[from] ParseIntError),
 }
