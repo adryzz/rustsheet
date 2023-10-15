@@ -33,11 +33,12 @@ impl Iterator for MajorScale {
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut num = self.current;
+        // FIXME: this code is hot garbage and doesnt work for scales that arent C
         match self.iter {
-            0 => {},
+            0 => {}
             1 | 2 | 4 | 5 | 6 => num += 2,
             3 | 7 => num += 1,
-            _=> return None
+            _ => return None,
         }
 
         self.iter += 1;
