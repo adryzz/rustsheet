@@ -1,7 +1,5 @@
 use crate::{notes::{Tone, NoteWhateverFixMeFindANewNamePleaseImBeggingYou}, tempo::TimeSignature};
 
-pub const STARTING_BAR_CAPACITY: usize = 4;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NotePosition {
     pub line: usize,
@@ -72,7 +70,7 @@ pub struct SingleLine {
 
 impl Default for SingleLine {
     fn default() -> Self {
-        let mut bars: Vec<Bar> = Vec::with_capacity(STARTING_BAR_CAPACITY);
+        let mut bars: Vec<Bar> = Vec::with_capacity(crate::STARTING_BAR_CAPACITY);
 
         bars.push(Bar::default());
 
@@ -81,8 +79,8 @@ impl Default for SingleLine {
 }
 
 impl SingleLine {
-    fn sane_default() -> Self {
-        let mut bars: Vec<Bar> = Vec::with_capacity(STARTING_BAR_CAPACITY);
+    pub fn sane_default() -> Self {
+        let mut bars: Vec<Bar> = Vec::with_capacity(crate::STARTING_BAR_CAPACITY);
 
         let bar = Bar {
             header: BarHeader::sane_default(),
