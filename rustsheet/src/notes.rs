@@ -69,7 +69,7 @@ impl Tone {
 
     pub fn from_semitones_since_c0(semitones: u32) -> Option<Tone> {
         // B255# is the highest representable note
-        if semitones > 3072 {
+        if semitones > 3071 {
             return None;
         }
 
