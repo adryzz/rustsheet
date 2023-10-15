@@ -1,26 +1,26 @@
 use crate::tempo::NoteSize;
+use std::fmt;
 use std::num::ParseIntError;
 use std::str::FromStr;
-use std::fmt;
 use thiserror::Error;
 use tinyvec::ArrayVec;
 
 #[derive(Debug, Clone, Copy)]
-pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
-    Note(Note),
-    Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
-    WithGrace{grace: Tone, note: Note},
+pub enum Note {
+    Note(NoteInfo),
+    Tuplet(ArrayVec<[NoteInfo; crate::MAX_NOTES_IN_TUPLET]>),
+    WithGrace { grace: Tone, note: NoteInfo },
 }
 
-impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
+impl Default for Note {
     fn default() -> Self {
-        NoteWhateverFixMeFindANewNamePleaseImBeggingYou::Note(Default::default())
+        Note::Note(Default::default())
     }
 }
 
 #[derive(Debug, Clone, Copy, Default)]
-pub struct Note {
-    pub pitch: Tone,
+pub struct NoteInfo {
+    pub tone: Tone,
     pub size: NoteSize,
     pub ty: NoteType,
 }
@@ -51,6 +51,14 @@ impl Default for Tone {
 }
 
 impl Tone {
+    pub const fn new(octave: Octave, position: u8) -> Self {
+        Self { octave, position, modifiers: None }
+    }
+
+    pub const fn with_modifiers(octave: Octave, position: u8, modifiers: ToneModifiers) -> Self {
+        Self { octave, position, modifiers: Some(modifiers) }
+    }
+
     pub fn get_semitones_since_c0(&self) -> u32 {
         let mut semitones = self.position as u32 * 12;
         semitones += self.octave as u32;

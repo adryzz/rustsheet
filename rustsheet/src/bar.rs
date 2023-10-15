@@ -1,4 +1,7 @@
-use crate::{notes::{Tone, NoteWhateverFixMeFindANewNamePleaseImBeggingYou}, tempo::TimeSignature};
+use crate::{
+    notes::{Note, Tone},
+    tempo::TimeSignature,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NotePosition {
@@ -44,7 +47,7 @@ impl BarHeader {
         Self {
             clef: Some(Clef::Bass),
             time_signature: Some(Default::default()),
-            attributes: Default::default()
+            attributes: Default::default(),
         }
     }
 }
@@ -52,7 +55,7 @@ impl BarHeader {
 #[derive(Debug, Clone, Default)]
 pub struct Bar {
     pub header: BarHeader,
-    pub notes: Vec<NoteWhateverFixMeFindANewNamePleaseImBeggingYou>
+    pub notes: Vec<Note>,
 }
 
 impl Bar {
@@ -84,7 +87,7 @@ impl SingleLine {
 
         let bar = Bar {
             header: BarHeader::sane_default(),
-            notes: Default::default()
+            notes: Default::default(),
         };
 
         bars.push(bar);
@@ -96,7 +99,7 @@ impl SingleLine {
 #[derive(Debug, Clone)]
 pub enum LineType {
     Single(SingleLine),
-    Double(SingleLine, SingleLine)
+    Double(SingleLine, SingleLine),
 }
 
 impl Default for LineType {
@@ -108,5 +111,5 @@ impl Default for LineType {
 #[derive(Debug, Clone, Default)]
 pub struct Line {
     pub name: Option<String>,
-    pub line: LineType
+    pub line: LineType,
 }
