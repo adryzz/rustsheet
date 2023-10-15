@@ -11,7 +11,7 @@ const STARTING_BAR_CAPACITY: usize = 4;
 #[derive(Debug, Clone)]
 pub struct MusicSheet {
     pub title: String,
-    pub subtitle: String,
+    pub subtitle: Option<String>,
     pub author: String,
     pub lines: Vec<Line>,
 }

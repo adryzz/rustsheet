@@ -109,6 +109,15 @@ pub struct NoteSize {
     pub modifiers: Option<NoteSizeModifiers>,
 }
 
+impl From<NoteSizeUnit> for NoteSize {
+    fn from(value: NoteSizeUnit) -> Self {
+        NoteSize {
+            unit: value,
+            modifiers: None
+        }
+    }
+}
+
 /// Expressed as
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum NoteSizeUnit {

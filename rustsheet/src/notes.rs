@@ -1,5 +1,5 @@
 use crate::tempo::NoteSize;
-use std::fmt;
+use std::{fmt, default};
 use std::num::ParseIntError;
 use std::str::FromStr;
 use thiserror::Error;
@@ -10,6 +10,7 @@ pub enum Note {
     Note(NoteInfo),
     Tuplet(ArrayVec<[NoteInfo; crate::MAX_NOTES_IN_TUPLET]>),
     WithGrace { grace: Tone, note: NoteInfo },
+    Rest(NoteSize)
 }
 
 impl Default for Note {
@@ -21,15 +22,7 @@ impl Default for Note {
 #[derive(Debug, Clone, Copy, Default)]
 pub struct NoteInfo {
     pub tone: Tone,
-    pub size: NoteSize,
-    pub ty: NoteType,
-}
-
-#[derive(Debug, Clone, Copy, Default)]
-pub enum NoteType {
-    #[default]
-    Note,
-    Rest,
+    pub size: NoteSize
 }
 
 #[derive(Debug, Clone, Copy)]

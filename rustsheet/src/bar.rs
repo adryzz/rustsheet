@@ -102,6 +102,12 @@ pub enum LineType {
     Double(SingleLine, SingleLine),
 }
 
+impl From<SingleLine> for LineType {
+    fn from(value: SingleLine) -> Self {
+        LineType::Single(value)
+    }
+}
+
 impl Default for LineType {
     fn default() -> Self {
         LineType::Single(Default::default())
@@ -112,4 +118,14 @@ impl Default for LineType {
 pub struct Line {
     pub name: Option<String>,
     pub line: LineType,
+}
+
+impl Line {
+    pub fn new(inner: LineType) -> Self {
+        Self { name: None, line: inner }
+    }
+
+    pub fn new_named(name: String, inner: LineType) -> Self {
+        Self { name: Some(name), line: inner }
+    }
 }
