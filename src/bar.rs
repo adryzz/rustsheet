@@ -1,4 +1,4 @@
-use crate::{notes::NotePitch, tempo::TimeSignature};
+use crate::{notes::Tone, tempo::TimeSignature};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NotePosition {
@@ -34,7 +34,7 @@ pub enum Clef {
 pub struct BarHeader {
     pub clef: Option<Clef>,
     pub time_signature: Option<TimeSignature>,
-    pub attributes: [Option<NotePitch>; 8],
+    pub attributes: [Option<Tone>; 8],
 }
 
 #[derive(Debug, Clone)]

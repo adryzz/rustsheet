@@ -10,7 +10,7 @@ pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
     Note(Note),
     Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
     // TODO: find if we even need a full Note for the grace or just its pitch
-    WithGrace(Note, Note),
+    WithGrace{grace: Tone, note: Note},
 }
 
 impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
@@ -21,7 +21,7 @@ impl Default for NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Note {
-    pub pitch: NotePitch,
+    pub pitch: Tone,
     pub size: NoteSize,
     pub ty: NoteType,
 }
@@ -34,14 +34,14 @@ pub enum NoteType {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct NotePitch {
+pub struct Tone {
     pub octave: Octave,
     pub position: u8,
-    pub modifiers: Option<NotePitchModifiers>,
+    pub modifiers: Option<ToneModifiers>,
 }
 
 // default is C4
-impl Default for NotePitch {
+impl Default for Tone {
     fn default() -> Self {
         Self {
             octave: Octave::C,
@@ -51,14 +51,14 @@ impl Default for NotePitch {
     }
 }
 
-impl NotePitch {
+impl Tone {
     pub fn get_semitones_since_c0(&self) -> u32 {
         let mut semitones = self.position as u32 * 12;
         semitones += self.octave as u32;
         match self.modifiers {
-            Some(NotePitchModifiers::Sharp) => semitones += 1,
+            Some(ToneModifiers::Sharp) => semitones += 1,
             // FIXME: dont allow C0 flat
-            Some(NotePitchModifiers::Flat) => semitones -= 1,
+            Some(ToneModifiers::Flat) => semitones -= 1,
             _ => {}
         };
 
@@ -66,36 +66,36 @@ impl NotePitch {
     }
 }
 
-impl PartialEq for NotePitch {
+impl PartialEq for Tone {
     fn eq(&self, other: &Self) -> bool {
         self.get_semitones_since_c0()
             .eq(&other.get_semitones_since_c0())
     }
 }
 
-impl Eq for NotePitch {}
+impl Eq for Tone {}
 
-impl PartialOrd for NotePitch {
+impl PartialOrd for Tone {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.get_semitones_since_c0()
             .partial_cmp(&other.get_semitones_since_c0())
     }
 }
 
-impl Ord for NotePitch {
+impl Ord for Tone {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.get_semitones_since_c0()
             .cmp(&other.get_semitones_since_c0())
     }
 }
 
-impl fmt::Display for NotePitch {
+impl fmt::Display for Tone {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}{}", self.octave, self.position)
     }
 }
 
-impl FromStr for NotePitch {
+impl FromStr for Tone {
     type Err = NoteError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -108,7 +108,7 @@ impl FromStr for NotePitch {
 
         let octave = Octave::try_from(oct)?;
         let num = &s[1..];
-        Ok(NotePitch {
+        Ok(Tone {
             octave,
             position: u8::from_str(num)?,
             // not implemented yet
@@ -160,18 +160,18 @@ impl fmt::Display for Octave {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub enum NotePitchModifiers {
+pub enum ToneModifiers {
     Sharp = 2,
     Flat = 0,
     Natural = 1,
 }
 
-impl fmt::Display for NotePitchModifiers {
+impl fmt::Display for ToneModifiers {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            NotePitchModifiers::Sharp => write!(f, "♯"),
-            NotePitchModifiers::Flat => write!(f, "♭"),
-            NotePitchModifiers::Natural => write!(f, "♮"),
+            ToneModifiers::Sharp => write!(f, "♯"),
+            ToneModifiers::Flat => write!(f, "♭"),
+            ToneModifiers::Natural => write!(f, "♮"),
         }
     }
 }
