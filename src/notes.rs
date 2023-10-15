@@ -9,7 +9,6 @@ use tinyvec::ArrayVec;
 pub enum NoteWhateverFixMeFindANewNamePleaseImBeggingYou {
     Note(Note),
     Tuplet(ArrayVec<[Note; crate::MAX_NOTES_IN_TUPLET]>),
-    // TODO: find if we even need a full Note for the grace or just its pitch
     WithGrace{grace: Tone, note: Note},
 }
 

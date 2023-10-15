@@ -87,6 +87,16 @@ impl fmt::Display for TimeSignature {
     }
 }
 
+impl Default for TimeSignature {
+    fn default() -> Self {
+        // SAFETY: four is always not equal to zero
+        unsafe {
+            Self { num: NonZeroU8::new_unchecked(4), den: NonZeroU8::new_unchecked(4) }
+        }
+        
+    }
+}
+
 pub trait TimeSignatureralElement {
     fn get_tempo(&self) -> TimeSignature;
 }
