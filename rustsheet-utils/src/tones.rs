@@ -1,4 +1,4 @@
-use rustsheet::notes::{Tone, Octave, ToneModifiers};
+use rustsheet::notes::{Octave, Tone, ToneModifiers};
 
 pub const C0: Tone = Tone::new(Octave::C, 0);
 pub const C0_SHARP: Tone = Tone::with_modifiers_unchecked(Octave::C, 0, ToneModifiers::Sharp);

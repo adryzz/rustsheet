@@ -49,6 +49,7 @@ name = "rustsheet-svg"
 version = "0.1.0"
 dependencies = [
  "rustsheet",
+ "rustsheet-utils",
  "svg",
 ]
 
