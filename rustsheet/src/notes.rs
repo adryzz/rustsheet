@@ -55,8 +55,43 @@ impl Tone {
         Self { octave, position, modifiers: None }
     }
 
-    pub const fn with_modifiers(octave: Octave, position: u8, modifiers: ToneModifiers) -> Self {
+    pub const fn with_modifiers_unchecked(octave: Octave, position: u8, modifiers: ToneModifiers) -> Self {
         Self { octave, position, modifiers: Some(modifiers) }
+    }
+
+    pub fn with_modifiers(octave: Octave, position: u8, modifiers: ToneModifiers) -> Option<Self> {
+        if octave == Octave::C && position == 0 && modifiers == ToneModifiers::Flat {
+            return None;
+        }
+
+        Some(Self { octave, position, modifiers: Some(modifiers) })
+    }
+
+    pub fn from_semitones_since_c0(semitones: u32) -> Option<Tone> {
+        // B255# is the highest representable note
+        if semitones > 3072 {
+            return None;
+        }
+
+        let rem = semitones % 12;
+        let position = ((semitones - rem) / 12) as u8;
+
+        match rem as u8 {
+            0 => Some(Tone::new(Octave::C, position)),
+            1 => Some(Tone::with_modifiers_unchecked(Octave::C, position, ToneModifiers::Sharp)),
+            2 => Some(Tone::new(Octave::D, position)),
+            3 => Some(Tone::with_modifiers_unchecked(Octave::D, position, ToneModifiers::Sharp)),
+            4 => Some(Tone::new(Octave::E, position)),
+            5 => Some(Tone::new(Octave::F, position)),
+            6 => Some(Tone::with_modifiers_unchecked(Octave::F, position, ToneModifiers::Sharp)),
+            7 => Some(Tone::new(Octave::G, position)),
+            8 => Some(Tone::with_modifiers_unchecked(Octave::G, position, ToneModifiers::Sharp)),
+            9 => Some(Tone::new(Octave::A, position)),
+            10 => Some(Tone::with_modifiers_unchecked(Octave::A, position, ToneModifiers::Sharp)),
+            11 => Some(Tone::new(Octave::B, position)),
+            12 => Some(Tone::new(Octave::C, position)),
+            _ => None
+        }
     }
 
     pub fn get_semitones_since_c0(&self) -> u32 {
@@ -98,7 +133,10 @@ impl Ord for Tone {
 
 impl fmt::Display for Tone {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}{}", self.octave, self.position)
+        match self.modifiers {
+            None => write!(f, "{}{}", self.octave, self.position),
+            Some(modifiers) => write!(f, "{}{}{}", self.octave, self.position, modifiers),
+        }
     }
 }
 
