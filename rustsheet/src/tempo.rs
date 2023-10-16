@@ -113,7 +113,7 @@ impl From<NoteSizeUnit> for NoteSize {
     fn from(value: NoteSizeUnit) -> Self {
         NoteSize {
             unit: value,
-            modifiers: None
+            modifiers: None,
         }
     }
 }

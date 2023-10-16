@@ -7,4 +7,9 @@ edition = "2021"
 
 [dependencies]
 rustsheet = { path = "../rustsheet" }
+rustsheet-utils = { path = "../rustsheet-utils" }
 svg = "0.14.0"
+
+
+[[example]]
+name = "test"

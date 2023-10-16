@@ -63,6 +63,10 @@ impl Bar {
         // FIXME: is this a crappy way to check?
         self.notes.len() == 0 && self.header == Default::default()
     }
+
+    pub fn check_time_signature(&self, signature: TimeSignature) -> bool {
+        true
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -122,10 +126,16 @@ pub struct Line {
 
 impl Line {
     pub fn new(inner: LineType) -> Self {
-        Self { name: None, line: inner }
+        Self {
+            name: None,
+            line: inner,
+        }
     }
 
     pub fn new_named(name: String, inner: LineType) -> Self {
-        Self { name: Some(name), line: inner }
+        Self {
+            name: Some(name),
+            line: inner,
+        }
     }
 }
