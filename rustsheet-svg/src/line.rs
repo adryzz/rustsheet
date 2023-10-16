@@ -1,7 +1,8 @@
 use rustsheet::bar::Bar;
-use svg::node::element::{Line, Group};
+use svg::{node::element::{Line, Group, Circle}, Node};
 
-const LINES_MARGIN: usize = 10;
+const VERTICAL_NOTE_MARGIN: usize = 5;
+const LINES_MARGIN: usize = 2 * VERTICAL_NOTE_MARGIN;
 const LINES_THICKNESS: usize = 1;
 const STROKE_COLOR: &str = "black";
 const STROKE: &str = "stroke";
@@ -36,7 +37,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
     let mut g = Group::new();
 
     // starting vertical line
-    g = g.add(
+    g.append(
         Line::new()
             .set("x1", x)
             .set("x2", x)
@@ -49,7 +50,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
     // the 5 bar lines
     for i in 0..5 {
         let cur_y = y + (i * LINES_MARGIN);
-        g = g.add(
+        g.append(
             Line::new()
                 .set("x1", x)
                 .set("x2", x + bar_size)
@@ -62,7 +63,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
 
     // if it's the last bar, draw one thin line, otherwise do a thin and a thick
     if !end {
-        g = g.add(
+        g.append(
             Line::new()
                 .set("x1", x + bar_size)
                 .set("x2", x + bar_size)
@@ -72,7 +73,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
                 .set(STROKE_WIDTH, LINES_THICKNESS),
         );
     } else {
-        g = g.add(
+        g.append(
             Line::new()
                 .set("x1", x + bar_size - END_BAR_MARGIN)
                 .set("x2", x + bar_size - END_BAR_MARGIN)
@@ -81,7 +82,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
                 .set(STROKE, STROKE_COLOR)
                 .set(STROKE_WIDTH, LINES_THICKNESS),
         );
-        g = g.add(
+        g.append(
             Line::new()
                 .set("x1", x + bar_size)
                 .set("x2", x + bar_size)
@@ -94,6 +95,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
 
     if let Some(clef) = bar.header.clef {
         // draw clef
+        
     }
 
     if let Some(ts) = bar.header.time_signature {
@@ -102,6 +104,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
 
     for note in &bar.notes {
         // draw notes
+        
     }
 
     g

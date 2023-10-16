@@ -1,5 +1,5 @@
 use crate::{
-    notes::{Note, Tone},
+    notes::{Note, Tone, Octave},
     tempo::TimeSignature,
 };
 
@@ -28,9 +28,27 @@ impl PartialOrd for NotePosition {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Clef {
     Treble,
-    Baritone,
+    Tenor,
     Bass,
-    SubBass,
+    /// No clef, places the selected tone as the center line
+    None{center: Tone}
+}
+
+impl Default for Clef {
+    fn default() -> Self {
+        Clef::None { center: Tone::new(Octave::C, 4) }
+    }
+}
+
+impl Clef {
+    pub fn get_center_tone(&self) -> Tone {
+        match self {
+            Clef::Treble => Tone::new(Octave::B, 4),
+            Clef::Tenor => Tone::new(Octave::C, 4),
+            Clef::Bass => Tone::new(Octave::D, 3),
+            Clef::None { center } => *center,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
