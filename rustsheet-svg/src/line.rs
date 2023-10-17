@@ -1,6 +1,8 @@
 use rustsheet::bar::Bar;
 use svg::{node::element::{Line, Group, Circle}, Node};
 
+use crate::RendererConfig;
+
 const VERTICAL_NOTE_MARGIN: usize = 5;
 const LINES_MARGIN: usize = 2 * VERTICAL_NOTE_MARGIN;
 const LINES_THICKNESS: usize = 1;
@@ -15,7 +17,7 @@ const CLEF_SIZE: usize = 40;
 const TIME_SIGNATURE_SIZE: usize = 25;
 const END_BAR_MARGIN: usize = 5;
 
-pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar) -> Group {
+pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar, config: &RendererConfig) -> Group {
     // calculate bar length
     let mut bar_size = MIN_SIZE_BAR;
     if bar.header.clef.is_some() {
