@@ -1,9 +1,12 @@
 mod line;
 
-use rustsheet::{bar::{LineType, Bar}, MusicSheet};
+use rustsheet::{
+    bar::{Bar, LineType},
+    MusicSheet,
+};
 use svg::{
     node::{
-        element::{Line, Text as TextElement, Rectangle},
+        element::{Line, Rectangle, Text as TextElement},
         Text,
     },
     Document,
@@ -12,6 +15,8 @@ use svg::{
 const VIEWBOX: &str = "viewBox";
 const FONT_SIZE: &str = "font-size";
 const TEXT_ANCHOR: &str = "text-anchor";
+
+const MARGIN: usize = 10;
 pub struct MusicSheetSVGRenderer {}
 
 impl MusicSheetSVGRenderer {
@@ -39,11 +44,11 @@ impl MusicSheetSVGRenderer {
     pub fn render_line(&self, line: &LineType, config: &RendererConfig) {}
 
     pub fn render_bar(&self, bar: &Bar, config: &RendererConfig) -> Vec<u8> {
-        let rendered = line::generate_bar(10, 10, true, bar, config);
+        let (rendered, bar_size) = line::generate_bar(MARGIN, MARGIN, true, bar, config);
         let doc = Document::new()
-        .set(VIEWBOX, (0, 0, 800, 400))
-        .add(bg_color(config.background_color))
-        .add(rendered);
+            .set(VIEWBOX, (0, 0, bar_size.0 + MARGIN, bar_size.1 + MARGIN))
+            .add(bg_color(config.background_color))
+            .add(rendered);
         let mut s = Vec::new();
 
         svg::write(&mut s, &doc).unwrap();
@@ -62,30 +67,33 @@ pub struct RendererConfig<'a> {
 
 impl Default for RendererConfig<'static> {
     fn default() -> Self {
-        Self { 
+        Self {
             background_color: "white",
             octave_colors: ["black"; 7],
             line_help_colors: ["#00000000"; 8],
-            error_checking: false
+            error_checking: false,
         }
     }
 }
 
 impl<'a> RendererConfig<'a> {
     pub fn default_accessibility() -> Self {
-        Self { 
+        Self {
             background_color: "#EFEFEF",
             octave_colors: ["black"; 7],
             line_help_colors: ["#00000000"; 8],
-            error_checking: false
+            error_checking: false,
         }
     }
 }
 
 fn bg_color(color: &str) -> Rectangle {
-    Rectangle::new().set("width", "100%")
-    .set("height", "100%")
-    .set("fill", color)
+    // BIG hack but like idk
+    // sometimes the viewport doesn't match the screen so like FIXME or something
+    Rectangle::new()
+        .set("width", "100%")
+        .set("height", "100%")
+        .set("fill", color)
 }
 
 fn h1_centered(text: &str, height: u32) -> TextElement {

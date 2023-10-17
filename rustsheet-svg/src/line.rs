@@ -1,5 +1,8 @@
 use rustsheet::bar::Bar;
-use svg::{node::element::{Line, Group, Circle}, Node};
+use svg::{
+    node::element::{Circle, Group, Line},
+    Node,
+};
 
 use crate::RendererConfig;
 
@@ -17,7 +20,13 @@ const CLEF_SIZE: usize = 40;
 const TIME_SIGNATURE_SIZE: usize = 25;
 const END_BAR_MARGIN: usize = 5;
 
-pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar, config: &RendererConfig) -> Group {
+pub fn generate_bar(
+    x: usize,
+    y: usize,
+    end: bool,
+    bar: &Bar,
+    config: &RendererConfig,
+) -> (Group, (usize, usize)) {
     // calculate bar length
     let mut bar_size = MIN_SIZE_BAR;
     if bar.header.clef.is_some() {
@@ -97,7 +106,6 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar, config: &RendererC
 
     if let Some(clef) = bar.header.clef {
         // draw clef
-        
     }
 
     if let Some(ts) = bar.header.time_signature {
@@ -106,8 +114,7 @@ pub fn generate_bar(x: usize, y: usize, end: bool, bar: &Bar, config: &RendererC
 
     for note in &bar.notes {
         // draw notes
-        
     }
 
-    g
+    (g, (x + bar_size, y + (4 * LINES_MARGIN)))
 }

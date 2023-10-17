@@ -1,5 +1,5 @@
 use crate::{
-    notes::{Note, Tone, Octave},
+    notes::{Note, Octave, Tone},
     tempo::TimeSignature,
 };
 
@@ -31,12 +31,16 @@ pub enum Clef {
     Tenor,
     Bass,
     /// No clef, places the selected tone as the center line
-    None{center: Tone}
+    None {
+        center: Tone,
+    },
 }
 
 impl Default for Clef {
     fn default() -> Self {
-        Clef::None { center: Tone::new(Octave::C, 4) }
+        Clef::None {
+            center: Tone::new(Octave::C, 4),
+        }
     }
 }
 

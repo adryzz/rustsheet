@@ -11,5 +11,6 @@ rustsheet-utils = { path = "../rustsheet-utils" }
 svg = "0.14.0"
 
 
+# This example renders the line shown in the README
 [[example]]
-name = "test"
+name = "readme"

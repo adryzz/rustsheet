@@ -1,7 +1,7 @@
 use crate::tempo::NoteSize;
+use std::fmt;
 use std::num::ParseIntError;
 use std::str::FromStr;
-use std::fmt;
 use thiserror::Error;
 use tinyvec::ArrayVec;
 
