@@ -3,7 +3,7 @@
 Music notation, written fully in Rust.
 
 ![A line of music rendered with rustsheet](/example.svg)
-(Rendered with rustsheet)
+(Rendered with rustsheet, [code](/rustsheet-svg/examples/readme.rs))
 
 ## Features
 
